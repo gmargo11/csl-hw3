@@ -3,7 +3,7 @@ import torch
 from torch.utils import data
 
 from pusher_policy_model import PusherPolicyModel
-from pusher_goal import pusher_env
+from pusher_goal import PusherEnv
 
 
 if __name__ == "__main__":

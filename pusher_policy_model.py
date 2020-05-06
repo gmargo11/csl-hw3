@@ -100,8 +100,9 @@ class PusherPolicyModel:
         return train_loss
 
     def infer(self, obs):
-        x = obs
-        return self.net(x)
+        with torch.no_grad():
+            x = torch.from_numpy(obs).float()
+            return self.net(x)
 
     def save(self, PATH):
         torch.save(self.net.state_dict(), PATH)
