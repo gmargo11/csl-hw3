@@ -27,16 +27,7 @@ gym.register(id='PusherEnv-v0',
          kwargs={})
 
 
-def train_ppo_fine_tune():
-    # modiify default args
-    args = get_args()
-    args.env_name = 'PusherEnv-v0'
-    args.algo = "ppo_fine_tune"
-    args.num_processes = 1
-    args.num_steps=1000
-    args.num_env_steps=40000
-    args.cuda = True
-
+def train_ppo_fine_tune(args):
 
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
@@ -195,4 +186,13 @@ def train_ppo_fine_tune():
     return episode_reward_means, episode_reward_times
 
 if __name__ == "__main__":
-    train_ppo_fine_tune()
+    # modify default args
+    args = get_args()
+    args.env_name = 'PusherEnv-v0'
+    args.algo = "ppo_fine_tune"
+    args.num_processes = 1
+    args.num_steps=1000
+    args.num_env_steps=40000
+    args.cuda = True
+
+    train_ppo_fine_tune(args)

@@ -25,15 +25,7 @@ gym.register(id='PusherEnv-v0',
          entry_point='pusher_goal:PusherEnv',        
          kwargs={})
 
-def main():
-    # modiify default args
-    args = get_args()
-    args.env_name = 'PusherEnv-v0'
-    args.algo = "ppo"
-    args.num_processes = 1
-    args.num_steps=1000
-    args.cuda = True
-
+def train_ppo_from_scratch(args):
 
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
@@ -85,6 +77,10 @@ def main():
     start = time.time()
     num_updates = int(
         args.num_env_steps) // args.num_steps // args.num_processes
+
+    episode_reward_means = []
+    episode_reward_times = []
+
     for j in range(num_updates):
 
         if args.use_linear_lr_decay:
@@ -155,12 +151,25 @@ def main():
                         np.max(episode_rewards), dist_entropy, value_loss,
                         action_loss))
 
+            episode_reward_means.append(np.mean(episode_rewards))
+            episode_reward_times.append(total_num_steps)
+
         if (args.eval_interval is not None and len(episode_rewards) > 1
                 and j % args.eval_interval == 0):
             ob_rms = utils.get_vec_normalize(envs).ob_rms
             evaluate(actor_critic, ob_rms, args.env_name, args.seed,
                      args.num_processes, eval_log_dir, device)
 
+    print(episode_reward_means, episode_reward_times)
+    return episode_reward_means, episode_reward_times
 
 if __name__ == "__main__":
-    main()
+    # modify default args
+    args = get_args()
+    args.env_name = 'PusherEnv-v0'
+    args.algo = "ppo"
+    args.num_processes = 1
+    args.num_steps=1000
+    args.cuda = True
+
+    train_ppo_from_scratch(args)
