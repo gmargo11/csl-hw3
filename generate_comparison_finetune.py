@@ -1,4 +1,5 @@
 from ppo_fine_tuning import train_ppo_fine_tune
+from ppo_fine_tuning_joint import train_ppo_fine_tune_joint
 from ppo_from_scratch import train_ppo_from_scratch
 
 from a2c_ppo_acktr.arguments import get_args
@@ -32,8 +33,8 @@ def generate_comparison_finetune():
 
 
     plt.figure()
-    plt.plot(scratch_rewards, scratch_times)
-    plt.plot(vanilla_rewards, vanilla_times)
+    plt.plot(scratch_times, scratch_rewards)
+    plt.plot(vanilla_times, vanilla_rewards)
     plt.xlabel("Timesteps")
     plt.ylabel("Mean Episode Reward (10 episodes)")
     plt.legend(["PPO from scratch", "PPO with expert, vanilla"]) #, "PPO with expert, joint loss"])
