@@ -21,7 +21,7 @@ def generate_comparison_finetune():
     args.env_name = 'PusherEnv-v0'
     args.num_processes = 1
     args.num_steps=1000
-    args.num_env_steps=11000
+    args.num_env_steps=301000
     args.cuda = False
 
     args.algo = "ppo"
