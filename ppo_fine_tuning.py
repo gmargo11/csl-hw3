@@ -58,7 +58,15 @@ def main():
         envs.action_space,
         base_kwargs={'recurrent': False,
                      'hidden_size': 32 })
-
+    # behavioral cloning
+    model = PusherPolicyModel()
+    num_epochs = 20
+    model.train(num_epochs=num_epochs)
+    
+    actor_critic.base.actor[0].weight = model.fc1.weight
+    actor_critic.base.actor[1].weight = model.fc2.weight
+    actor_critic.dist.fc_mean.weight = model.fc3.weight
+    
     
     actor_critic.to(device)
 
