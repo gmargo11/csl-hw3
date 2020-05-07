@@ -21,10 +21,6 @@ from evaluation import evaluate
 
 from pusher_goal import PusherEnv
 
-gym.register(id='PusherEnv-v0',
-         entry_point='pusher_goal:PusherEnv',        
-         kwargs={})
-
 def train_ppo_from_scratch(args):
 
     torch.manual_seed(args.seed)
@@ -164,6 +160,12 @@ def train_ppo_from_scratch(args):
     return episode_reward_means, episode_reward_times
 
 if __name__ == "__main__":
+    # register environment
+    gym.register(id='PusherEnv-v0',
+         entry_point='pusher_goal:PusherEnv',        
+         kwargs={})
+
+
     # modify default args
     args = get_args()
     args.env_name = 'PusherEnv-v0'

@@ -9,12 +9,10 @@ import matplotlib.pyplot as plt
 
 import gym
 from pusher_goal import PusherEnv
-gym.register(id='PusherEnv-v0',
-         entry_point='pusher_goal:PusherEnv',        
-         kwargs={})
 
 
 def generate_comparison_finetune():
+    
     # modify default args
     args = get_args()
     args.env_name = 'PusherEnv-v0'
@@ -45,3 +43,10 @@ def generate_comparison_finetune():
 
 
 
+if __name__ == "__main__":
+    # register env
+    gym.register(id='PusherEnv-v0',
+         entry_point='pusher_goal:PusherEnv',        
+         kwargs={})
+
+    generate_comparison_finetune()

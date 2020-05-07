@@ -22,9 +22,6 @@ from evaluation import evaluate
 from pusher_goal import PusherEnv
 from pusher_policy_model import PusherPolicyModel
 
-gym.register(id='PusherEnv-v0',
-         entry_point='pusher_goal:PusherEnv',        
-         kwargs={})
 
 
 def train_ppo_fine_tune(args):
@@ -186,6 +183,12 @@ def train_ppo_fine_tune(args):
     return episode_reward_means, episode_reward_times
 
 if __name__ == "__main__":
+    # register environment
+    gym.register(id='PusherEnv-v0',
+         entry_point='pusher_goal:PusherEnv',        
+         kwargs={})
+
+
     # modify default args
     args = get_args()
     args.env_name = 'PusherEnv-v0'
