@@ -27,7 +27,7 @@ gym.register(id='PusherEnv-v0',
          kwargs={})
 
 
-def main():
+def train_ppo_fine_tune():
     # modiify default args
     args = get_args()
     args.env_name = 'PusherEnv-v0'
@@ -106,8 +106,8 @@ def main():
     num_updates = int(
         args.num_env_steps) // args.num_steps // args.num_processes
 
-   episode_reward_means = np.array(int(num_updates/args.log_interval))
-   episode_reward_times = np.array(int(num_updates/args.log_interval))
+    episode_reward_means = []
+    episode_reward_times = []
 
 
     for j in range(num_updates):
@@ -180,8 +180,9 @@ def main():
                         np.max(episode_rewards), dist_entropy, value_loss,
                         action_loss))
             
-            episode_reward_means[int(j / args.log_interval)] = np.mean(episode_rewards)
-            episode_reward_times[int(j / args.log_interval)] = total_num_steps
+            
+            episode_reward_means.append(np.mean(episode_rewards))
+            episode_reward_times.append(total_num_steps)
 
         if (args.eval_interval is not None and len(episode_rewards) > 1
                 and j % args.eval_interval == 0):
@@ -191,5 +192,7 @@ def main():
 
     print(episode_reward_means, episode_reward_times)
 
+    return episode_reward_means, episode_reward_times
+
 if __name__ == "__main__":
-    main()
+    train_ppo_fine_tune()
