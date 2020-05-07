@@ -54,7 +54,7 @@ def train_ppo_fine_tune_joint(args):
                      'hidden_size': 32 })
     # behavioral cloning
     model = PusherPolicyModel()
-    num_epochs = 20
+    num_epochs = 2
     model.train(num_epochs=num_epochs)
 
 
@@ -74,6 +74,9 @@ def train_ppo_fine_tune_joint(args):
     dataset = np.load('./expert.npz')
     obs_expert = torch.Tensor(dataset['obs'])
     actions_expert = torch.Tensor(dataset['action'])
+
+    obs_expert.to(device)
+    actions_expert.to(device)
 
     agent = PPOJointLoss(
         actor_critic,
