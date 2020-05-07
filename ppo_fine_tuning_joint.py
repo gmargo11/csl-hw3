@@ -54,7 +54,7 @@ def train_ppo_fine_tune_joint(args):
                      'hidden_size': 32 })
     # behavioral cloning
     model = PusherPolicyModel()
-    num_epochs = 2
+    num_epochs = 20
     model.train(num_epochs=num_epochs)
 
 
@@ -78,6 +78,8 @@ def train_ppo_fine_tune_joint(args):
     obs_expert.to(device)
     actions_expert.to(device)
 
+    joint_loss_coef = 0.1
+
     agent = PPOJointLoss(
         actor_critic,
         args.clip_param,
@@ -85,8 +87,8 @@ def train_ppo_fine_tune_joint(args):
         args.num_mini_batch,
         args.value_loss_coef,
         args.entropy_coef,
-        joint_loss_coef=0.1,
-        obs_expert = obs_expert,
+        joint_loss_coef=joint_loss_coef,
+        obs_expert=obs_expert,
         actions_expert=actions_expert,
         lr=args.lr,
         eps=args.eps,
@@ -208,6 +210,6 @@ if __name__ == "__main__":
     args.num_processes = 1
     args.num_steps=1000
     args.num_env_steps=40000
-    args.cuda = True
+    args.cuda = False
 
     train_ppo_fine_tune_joint(args)

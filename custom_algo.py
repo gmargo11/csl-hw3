@@ -91,7 +91,7 @@ class PPOJointLoss():
                     self.obs_expert, recurrent_hidden_states_batch, masks_batch,
                     self.actions_expert)
                 joint_loss = -action_log_probs.mean()
-                print(joint_loss, self.joint_loss_coef, value_loss, self.value_loss_coef)
+                #print(joint_loss, self.joint_loss_coef, value_loss, self.value_loss_coef)
 
 
                 self.optimizer.zero_grad()
