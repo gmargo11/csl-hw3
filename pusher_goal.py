@@ -11,6 +11,7 @@ from airobot.utils.common import euler2quat
 from airobot.utils.common import quat_multiply
 from airobot.utils.common import rotvec2quat
 from gym import spaces
+import gym
 import pybullet as p
 
 

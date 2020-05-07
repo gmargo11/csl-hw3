@@ -22,15 +22,18 @@ from evaluation import evaluate
 from pusher_goal import PusherEnv
 
 gym.register(id='PusherEnv-v0',
-         entry_point='pusher_env:PusherEnv',
-         max_episode_steps=200,         
-         reward_threshold=2500.0,         
+         entry_point='pusher_goal:PusherEnv',        
          kwargs={})
 
 def main():
     # modiify default args
     args = get_args()
     args.env_name = 'PusherEnv-v0'
+    args.algo = "ppo"
+    args.num_processes = 1
+    args.num_steps=1000
+    args.cuda = True
+
 
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
@@ -44,17 +47,17 @@ def main():
     utils.cleanup_log_dir(log_dir)
     utils.cleanup_log_dir(eval_log_dir)
 
-    torch.set_num_threads(1)
+    torch.set_num_threads(2)
     device = torch.device("cuda:0" if args.cuda else "cpu")
 
     envs = make_vec_envs(args.env_name, args.seed, args.num_processes,
-                         args.gamma, args.log_dir, device, False)
+                         args.gamma, args.log_dir, device, True)
 
     actor_critic = Policy( # 2-layer fully connected network
         envs.observation_space.shape,
         envs.action_space,
         base_kwargs={'recurrent': False,
-                     'hidden_size': 64 })
+                     'hidden_size': 32 })
     actor_critic.to(device)
 
 
@@ -88,7 +91,7 @@ def main():
             # decrease learning rate linearly
             utils.update_linear_schedule(
                 agent.optimizer, j, num_updates,
-                agent.optimizer.lr if args.algo == "acktr" else args.lr)
+                args.lr)
 
         for step in range(args.num_steps):
             # Sample actions
