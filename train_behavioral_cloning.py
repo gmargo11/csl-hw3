@@ -5,10 +5,29 @@ from torch.utils import data
 from pusher_policy_model import PusherPolicyModel
 from pusher_goal import PusherEnv
 
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
 
 if __name__ == "__main__":
+
     model = PusherPolicyModel()
-    model.train(num_epochs=20)
+    num_epochs = 20
+    train_losses, valid_losses = model.train(num_epochs=num_epochs)
+    
+    plt.figure()
+    plt.plot(range(num_epochs+1), train_losses)
+    plt.plot(range(num_epochs+1), valid_losses)
+    plt.ylabel("Loss (MSE)")
+    plt.xlabel("Epoch")
+    plt.title("Behavioral Cloning Training")
+    plt.legend("Training Loss", "Validation Loss")
+    plt.ylim(0, train_losses[1] * 2.0)
+    plt.show()
+    plt.savefig("behavioral_cloning_training.png")
+    
+    
 
     ## evaluate model on 100 episodes
     env = PusherEnv()

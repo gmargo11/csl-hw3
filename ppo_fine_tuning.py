@@ -58,6 +58,8 @@ def main():
         envs.action_space,
         base_kwargs={'recurrent': False,
                      'hidden_size': 32 })
+
+    
     actor_critic.to(device)
 
 
