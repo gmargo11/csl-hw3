@@ -14,7 +14,7 @@ from gym import spaces
 import pybullet as p
 
 
-class PusherEnv:
+class PusherEnv(gym.Env):
 	def __init__(self, action_repeat=10, render=False):
 		self._action_repeat = action_repeat
 		self.spec = None		
