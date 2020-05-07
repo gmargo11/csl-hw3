@@ -26,13 +26,15 @@ gym.register(id='PusherEnv-v0',
          entry_point='pusher_goal:PusherEnv',        
          kwargs={})
 
+
 def main():
     # modiify default args
     args = get_args()
     args.env_name = 'PusherEnv-v0'
-    args.algo = "ppo"
+    args.algo = "ppo_fine_tune"
     args.num_processes = 1
     args.num_steps=1000
+    args.num_env_steps=40000
     args.cuda = True
 
 
@@ -63,22 +65,18 @@ def main():
     model = PusherPolicyModel()
     num_epochs = 20
     model.train(num_epochs=num_epochs)
-     
-    #actor_critic.base.actor[0].weight = model.net.fc1.weight
-    #actor_critic.base.actor[0].bias = model.net.fc1.bias
-    #actor_critic.base.actor[1].weight = model.net.fc2.weight
-    #actor_critic.base.actor[1].bias = model.net.fc2.bias
-    #actor_critic.base.critic[0].weight = model.net.fc1.weight
-    #actor_critic.base.critic[0].bias = model.net.fc1.bias
-    #actor_critic.base.critic[1].weight = model.net.fc2.weight
-    #actor_critic.base.critic[1].bias = model.net.fc2.bias
-    #actor_critic.dist.fc_mean.weight = model.net.fc3.weight
-    #actor_critic.dist.fc_mean.bias = model.net.fc3.bias
 
-    actor_critic.base.actor[0] = model.net.fc1
-    actor_critic.base.actor[1] = model.net.fc2
-    actor_critic.dist.fc_mean = model.net.fc3
-    
+
+    actor_critic.base.actor[0].weight.data.copy_(model.net.fc1.weight.data)
+    actor_critic.base.actor[0].bias.data.copy_(model.net.fc1.bias.data)
+    actor_critic.base.actor[2].weight.data.copy_(model.net.fc2.weight.data)
+    actor_critic.base.actor[2].bias.data.copy_(model.net.fc2.bias.data)
+    actor_critic.base.critic[0].weight.data.copy_(model.net.fc1.weight.data)
+    actor_critic.base.critic[0].bias.data.copy_(model.net.fc1.bias.data)
+    actor_critic.base.critic[2].weight.data.copy_(model.net.fc2.weight.data)
+    actor_critic.base.critic[2].bias.data.copy_(model.net.fc2.bias.data)
+    actor_critic.dist.fc_mean.weight.data.copy_(model.net.fc3.weight.data)
+    actor_critic.dist.fc_mean.bias.data.copy_(model.net.fc3.bias.data)
     
     actor_critic.to(device)
 
@@ -107,6 +105,11 @@ def main():
     start = time.time()
     num_updates = int(
         args.num_env_steps) // args.num_steps // args.num_processes
+
+   episode_reward_means = np.array(int(num_updates/args.log_interval))
+   episode_reward_times = np.array(int(num_updates/args.log_interval))
+
+
     for j in range(num_updates):
 
         if args.use_linear_lr_decay:
@@ -176,6 +179,9 @@ def main():
                         np.median(episode_rewards), np.min(episode_rewards),
                         np.max(episode_rewards), dist_entropy, value_loss,
                         action_loss))
+            
+            episode_reward_means[int(j / args.log_interval)] = np.mean(episode_rewards)
+            episode_reward_times[int(j / args.log_interval)] = total_num_steps
 
         if (args.eval_interval is not None and len(episode_rewards) > 1
                 and j % args.eval_interval == 0):
@@ -183,6 +189,7 @@ def main():
             evaluate(actor_critic, ob_rms, args.env_name, args.seed,
                      args.num_processes, eval_log_dir, device)
 
+    print(episode_reward_means, episode_reward_times)
 
 if __name__ == "__main__":
     main()
