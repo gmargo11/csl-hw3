@@ -78,7 +78,7 @@ def train_ppo_fine_tune_joint(args):
     obs_expert.to(device)
     actions_expert.to(device)
 
-    joint_loss_coef = 0.1
+    joint_loss_coef = 0.01
 
     agent = PPOJointLoss(
         actor_critic,
