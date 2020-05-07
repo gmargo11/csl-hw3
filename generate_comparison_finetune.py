@@ -1,6 +1,6 @@
 from ppo_fine_tuning import train_ppo_fine_tune
 from ppo_fine_tuning_joint import train_ppo_fine_tune_joint
-from ppo_from_scratch import train_ppo_from_scratch
+#from ppo_from_scratch import train_ppo_from_scratch
 
 from a2c_ppo_acktr.arguments import get_args
 
