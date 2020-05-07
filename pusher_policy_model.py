@@ -10,13 +10,13 @@ import numpy as np
 class PusherPolicyNet(torch.nn.Module):
     def __init__(self):
         super(PusherPolicyNet, self).__init__()
-        self.fc1 = nn.Linear(9, 30)
-        self.fc2 = nn.Linear(30, 30)
-        self.fc3 = nn.Linear(30, 2)
+        self.fc1 = nn.Linear(9, 32)
+        self.fc2 = nn.Linear(32, 32)
+        self.fc3 = nn.Linear(32, 2)
 
     def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
+        x = F.tanh(self.fc1(x))
+        x = F.tanh(self.fc2(x))
         x = self.fc3(x)
         return x
 

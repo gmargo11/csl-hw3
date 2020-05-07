@@ -20,6 +20,7 @@ from a2c_ppo_acktr.storage import RolloutStorage
 from evaluation import evaluate
 
 from pusher_goal import PusherEnv
+from pusher_policy_model import PusherPolicyModel
 
 gym.register(id='PusherEnv-v0',
          entry_point='pusher_goal:PusherEnv',        
@@ -62,10 +63,21 @@ def main():
     model = PusherPolicyModel()
     num_epochs = 20
     model.train(num_epochs=num_epochs)
-    
-    actor_critic.base.actor[0].weight = model.fc1.weight
-    actor_critic.base.actor[1].weight = model.fc2.weight
-    actor_critic.dist.fc_mean.weight = model.fc3.weight
+     
+    #actor_critic.base.actor[0].weight = model.net.fc1.weight
+    #actor_critic.base.actor[0].bias = model.net.fc1.bias
+    #actor_critic.base.actor[1].weight = model.net.fc2.weight
+    #actor_critic.base.actor[1].bias = model.net.fc2.bias
+    #actor_critic.base.critic[0].weight = model.net.fc1.weight
+    #actor_critic.base.critic[0].bias = model.net.fc1.bias
+    #actor_critic.base.critic[1].weight = model.net.fc2.weight
+    #actor_critic.base.critic[1].bias = model.net.fc2.bias
+    #actor_critic.dist.fc_mean.weight = model.net.fc3.weight
+    #actor_critic.dist.fc_mean.bias = model.net.fc3.bias
+
+    actor_critic.base.actor[0] = model.net.fc1
+    actor_critic.base.actor[1] = model.net.fc2
+    actor_critic.dist.fc_mean = model.net.fc3
     
     
     actor_critic.to(device)
