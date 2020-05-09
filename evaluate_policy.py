@@ -40,11 +40,12 @@ def evaluate_policy(args):
         num_episodes = 100
         avg_L2_dist = 0
 
+        frame = 0        
 
         for i in range(num_episodes):
             done = False
             obs = env.reset()
-            step = 0
+
             while not done:
                 #value, action, action_log_prob, recurrent_hidden_states = actor_critic.act(torch.tensor(obs).float(), None, None, deterministic=True)
                 action = model.infer(obs)
@@ -52,9 +53,9 @@ def evaluate_policy(args):
                 obs, reward, done, info = env.step(action)
                 if i < 10:
                     rgb = env.render()
-                    im = Image.fromarray(img)
-                    im.save('imgs/{}{:04d}.png'.format(args.algo, step)
-                    step += 1
+                    im = Image.fromarray(rgb)
+                    im.save('imgs/{}{:04d}.png'.format(args.algo, frame))
+                    frame += 1
 
             print(obs)
             dist = np.linalg.norm(obs[3:6] - obs[6:9])
