@@ -38,7 +38,7 @@ def train_ppo_fine_tune(args):
     utils.cleanup_log_dir(log_dir)
     utils.cleanup_log_dir(eval_log_dir)
 
-    torch.set_num_threads(2)
+    torch.set_num_threads(1)
     device = torch.device("cuda:0" if args.cuda else "cpu")
 
     envs = make_vec_envs(args.env_name, args.seed, args.num_processes,
@@ -150,7 +150,7 @@ def train_ppo_fine_tune(args):
                 os.makedirs(save_path)
             except OSError:
                 pass
-
+            print("saving")
             torch.save([
                 actor_critic,
                 getattr(utils.get_vec_normalize(envs), 'ob_rms', None)
@@ -179,6 +179,17 @@ def train_ppo_fine_tune(args):
                      args.num_processes, eval_log_dir, device)
 
     print(episode_reward_means, episode_reward_times)
+    
+    save_path = os.path.join(args.save_dir, args.algo)
+    try:
+        os.makedirs(save_path)
+    except OSError:
+        pass
+    print("saving")
+    torch.save([
+        actor_critic,
+        getattr(utils.get_vec_normalize(envs), 'ob_rms', None)
+    ], os.path.join(save_path, args.env_name + ".pt"))
 
     return episode_reward_means, episode_reward_times
 
@@ -195,7 +206,7 @@ if __name__ == "__main__":
     args.algo = "ppo_fine_tune"
     args.num_processes = 1
     args.num_steps=1000
-    args.num_env_steps=40000
+    args.num_env_steps=300000
     args.cuda = True
 
     train_ppo_fine_tune(args)

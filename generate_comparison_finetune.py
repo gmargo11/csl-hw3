@@ -22,6 +22,7 @@ def generate_comparison_finetune():
     args.num_processes = 1
     args.num_steps=1000
     args.num_env_steps=301000
+    args.save_interval=1
     args.cuda = False
 
     args.algo = "ppo"
