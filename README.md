@@ -1,4 +1,4 @@
-# csl-hw3
+# 6.884 Computational Sensorimotor Learning Homework 3
 
 ## Setup
 Dependencies:
