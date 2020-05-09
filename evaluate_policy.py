@@ -10,6 +10,8 @@ from a2c_ppo_acktr.envs import make_vec_envs
 from pusher_goal import PusherEnv
 from pusher_policy_model import PusherPolicyModel
 
+from PIL import Image
+
 
 def evaluate_policy(args):
     with torch.no_grad():
@@ -35,19 +37,25 @@ def evaluate_policy(args):
         #                 args.gamma, args.log_dir, device, True)
 
         # do episodes
-        num_episodes = 10
+        num_episodes = 100
         avg_L2_dist = 0
 
 
         for i in range(num_episodes):
             done = False
             obs = env.reset()
+            step = 0
             while not done:
                 #value, action, action_log_prob, recurrent_hidden_states = actor_critic.act(torch.tensor(obs).float(), None, None, deterministic=True)
                 action = model.infer(obs)
                 #print(action.numpy()[0,1,0])
                 obs, reward, done, info = env.step(action)
-            
+                if i < 10:
+                    rgb = env.render()
+                    im = Image.fromarray(img)
+                    im.save('imgs/{}{:04d}.png'.format(args.algo, step)
+                    step += 1
+
             print(obs)
             dist = np.linalg.norm(obs[3:6] - obs[6:9])
             print(dist)
