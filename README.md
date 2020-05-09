@@ -1,5 +1,7 @@
 # 6.884 Computational Sensorimotor Learning Homework 3
 
+Read the report [here](https://github.com/gmargo11/csl-hw3/blob/master/CSL_HW3.pdf).
+
 ## Setup
 Dependencies:
 - python 3.6+
@@ -17,4 +19,4 @@ You can train a policy in the pushing environment using behavioral cloning by ru
 
 Running `generate_comparison_finetune.py` will execute three PPO runs: one with no pre-training, one pre-trained with a vanilla loss function, and one pre-trained with a joint loss function that biases exploration towards the neighborhood of expert behavior.
 
-The parameters of the trained networks are saved in the `trained_models` folder. To evaluate these models, run `evaluate_policy.py`. This will evaluate model performance across 100 episodes and save frames of the first 10 episodes in the `imgs` folder. Run `bash make_videos.sh` to generate videos from these frames.
+The parameters of the trained networks are saved in the `trained_models` folder. To evaluate these models, run `evaluate_policy.py`. This will evaluate model performance across 100 episodes and save frames of the first 10 episodes in the `imgs` folder. Run `bash make_videos.sh` to generate videos from these frames. [Here](https://drive.google.com/drive/folders/1plNm8G8yayOXdlaRtwhvTOmH7gvMhfrc) are some example videos.
