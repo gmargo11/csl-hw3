@@ -35,6 +35,7 @@ if __name__ == "__main__":
     avg_L2_dist = 0
     avg_reward = 0
 
+    frame = 0
 
     for i in range(num_episodes):
         done = False
@@ -44,6 +45,11 @@ if __name__ == "__main__":
             action = model.infer(obs)
             obs, reward, done, info = env.step(action)
             total_reward += reward
+            if i < 10:
+                    rgb = env.render()
+                    im = Image.fromarray(rgb)
+                    im.save('imgs/{}{:04d}.png'.format("bc", frame))
+                    frame += 1
 
         dist = np.linalg.norm(obs[3:6] - obs[6:9])
         avg_L2_dist += dist / num_episodes
