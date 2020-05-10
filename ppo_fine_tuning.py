@@ -206,7 +206,7 @@ if __name__ == "__main__":
     args.algo = "ppo_fine_tune"
     args.num_processes = 1
     args.num_steps=1000
-    args.num_env_steps=300000
+    args.num_env_steps=301000
     args.cuda = True
 
     train_ppo_fine_tune(args)

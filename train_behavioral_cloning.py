@@ -5,6 +5,7 @@ from torch.utils import data
 from pusher_policy_model import PusherPolicyModel
 from pusher_goal import PusherEnv
 
+from PIL import Image
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
